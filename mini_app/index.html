@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>LEGENDA POSTER SHOP</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background-color: #1e1e1e;
+            background-image: radial-gradient(circle at 10% 20%, #2a2a2a 1%, #1a1a1a 100%);
+            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+            color: #e0e0e0;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .page { display: none; max-width: 500px; margin: 0 auto; animation: fadeIn 0.3s ease; }
+        .page.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px);} to { opacity: 1; transform: translateY(0);} }
+        .card {
+            background: rgba(30, 30, 35, 0.9);
+            backdrop-filter: blur(4px);
+            border-radius: 28px;
+            padding: 24px 20px;
+            margin-bottom: 24px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+            border: 1px solid rgba(0, 255, 255, 0.2);
+        }
+        .neon-img {
+            width: 100%;
+            border-radius: 24px;
+            box-shadow: 0 0 12px #00ffff66, 0 0 6px #00ffffaa;
+            background: #2c2c2c;
+            display: block;
+        }
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 14px 0;
+            margin-top: 16px;
+            border: none;
+            border-radius: 60px;
+            font-weight: bold;
+            font-size: 18px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: #0a2f2f;
+            color: #0ff;
+            box-shadow: 0 0 6px #0ff;
+        }
+        .btn-primary { background: #0ff; color: #0a1a1a; box-shadow: 0 0 12px #0ff; }
+        .btn-primary:active { transform: scale(0.97); background: #0dd; }
+        .btn-secondary { background: #1f3f3f; }
+        .btn-secondary:active { transform: scale(0.97); }
+        .table-wrapper { overflow-x: auto; overflow-y: auto; max-height: 260px; margin: 12px 0; border-radius: 10px; border: 1px solid rgba(0,255,255,0.15); }
+        table { width: 100%; border-collapse: collapse; font-size: 12px; }
+        thead th { position: sticky; top: 0; background: #1a2a2a; z-index: 1; }
+        th, td { padding: 7px 6px; text-align: left; border-bottom: 1px solid rgba(0,255,255,0.12); white-space: nowrap; }
+        th { color: #0ff; font-size: 11px; letter-spacing: 0.5px; }
+        td { color: #ddd; }
+        .status { font-weight: bold; font-size: 13px; }
+        .status.moderating { color: #ffaa44; }
+        .status.approved { color: #0f6; }
+        .status.rejected { color: #f44; }
+        input {
+            width: 100%;
+            padding: 14px 16px;
+            margin: 12px 0;
+            background: #2c2e32;
+            border: 1px solid #0ff;
+            border-radius: 60px;
+            color: #fff;
+            font-size: 16px;
+        }
+        input:focus { box-shadow: 0 0 8px #0ff; outline: none; }
+        .qr-img { max-width: 220px; margin: 20px auto; display: block; border-radius: 24px; box-shadow: 0 0 20px #0ff; }
+        .bold-title { font-weight: 800; font-size: 22px; text-align: center; margin: 20px 0; color: #0ff; }
+        .flex-btns { display: flex; gap: 16px; }
+        .flex-btns .btn { flex: 1; }
+        .footer-note { font-size: 12px; text-align: center; margin-top: 20px; opacity: 0.7; }
+        .shop-title { text-align: center; font-size: 24px; font-weight: 800; margin-bottom: 20px; color: #0ff; text-shadow: 0 0 5px #0ff; }
+        .counter-block {
+            background: rgba(0,255,255,0.06);
+            border: 1px solid rgba(0,255,255,0.25);
+            border-radius: 18px;
+            padding: 14px 18px;
+            margin: 14px 0;
+        }
+        .counter-label {
+            font-size: 12px;
+            color: #7ff;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+        }
+        .counter-numbers {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 8px;
+        }
+        .counter-remaining {
+            font-size: 28px;
+            font-weight: 900;
+            color: #0ff;
+            text-shadow: 0 0 8px #0ff;
+        }
+        .counter-total {
+            font-size: 13px;
+            color: #7ff;
+        }
+        .counter-bar-bg {
+            background: rgba(0,255,255,0.1);
+            border-radius: 99px;
+            height: 8px;
+            overflow: hidden;
+        }
+        .counter-bar-fill {
+            height: 100%;
+            border-radius: 99px;
+            background: linear-gradient(90deg, #0ff, #0af);
+            box-shadow: 0 0 8px #0ff;
+            transition: width 0.8s ease;
+            width: 0%;
+        }
+        .counter-taken {
+            font-size: 12px;
+            color: #5cc;
+            margin-top: 6px;
+            text-align: right;
+        }
+        .ref-block {
+            background: rgba(255,200,0,0.07);
+            border: 1px solid rgba(255,200,0,0.3);
+            border-radius: 18px;
+            padding: 14px 18px;
+            margin: 10px 0;
+        }
+        .ref-label { font-size: 12px; color: #fd8; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px; }
+        .ref-progress-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; }
+        .ref-count { font-size: 26px; font-weight: 900; color: #fd8; text-shadow: 0 0 8px #fd84; }
+        .ref-goal { font-size: 13px; color: #fd8; }
+        .ref-bar-bg { background: rgba(255,200,0,0.15); border-radius: 99px; height: 8px; overflow: hidden; }
+        .ref-bar-fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg, #fd8, #fa4); box-shadow: 0 0 6px #fd84; transition: width 0.8s ease; width: 0%; }
+        .ref-hint { font-size: 12px; color: #cb8; margin-top: 8px; }
+        .ref-link-box { background: rgba(0,0,0,0.3); border-radius: 10px; padding: 8px 12px; font-size: 12px; color: #fa8; word-break: break-all; margin-top: 8px; cursor: pointer; }
+        .bonus-badge { display: inline-block; background: linear-gradient(90deg,#fd8,#fa4); color: #1a1200; font-weight: bold; font-size: 10px; border-radius: 6px; padding: 2px 6px; margin-left: 4px; vertical-align: middle; }
+        .my-orders-section { margin-bottom: 18px; }
+        .my-orders-header { font-size: 15px; font-weight: 700; color: #0ff; margin-bottom: 10px; }
+        .my-order-card {
+            background: rgba(0,255,255,0.05);
+            border: 1px solid rgba(0,255,255,0.2);
+            border-radius: 14px;
+            padding: 12px 14px;
+            margin-bottom: 10px;
+            font-size: 13px;
+        }
+        .my-order-card .oc-row { display: flex; justify-content: space-between; margin-bottom: 4px; }
+        .my-order-card .oc-label { color: #7ff; }
+        .my-order-card .oc-val { color: #fff; font-weight: 600; }
+        .my-order-card .oc-status { font-weight: bold; }
+        .my-order-card .oc-status.mod { color: #ffaa44; }
+        .my-order-card .oc-status.ok  { color: #0f6; }
+        .my-order-card .oc-status.no  { color: #f44; }
+        .my-orders-phone-row { display: flex; gap: 8px; margin-bottom: 10px; }
+        .my-orders-phone-row input { margin: 0; flex: 1; font-size: 14px; padding: 10px 14px; }
+        .my-orders-phone-row button { flex-shrink: 0; padding: 10px 16px; font-size: 14px; border-radius: 60px; border: none; background: #1f4f4f; color: #0ff; font-weight: 700; cursor: pointer; }
+        .section-divider { border: none; border-top: 1px solid rgba(0,255,255,0.15); margin: 18px 0; }
+    </style>
+</head>
+<body>
+
+<div id="mainPage" class="page active">
+    <div class="card">
+        <div class="shop-title">LEGENDA POSTER SHOP</div>
+        <img id="posterImage" class="neon-img" src="legenda_bg.png" alt="LEGENDA POSTER SHOP">
+        <div class="counter-block">
+            <div class="counter-label">🔥 Осталось мест</div>
+            <div class="counter-numbers">
+                <span class="counter-remaining" id="counterRemaining">—</span>
+                <span class="counter-total">из 2 000</span>
+            </div>
+            <div class="counter-bar-bg">
+                <div class="counter-bar-fill" id="counterBar"></div>
+            </div>
+            <div class="counter-taken" id="counterTaken"></div>
+        </div>
+        <button id="buyBtn" class="btn btn-primary">📦 КУПИТЬ ПОСТЕР</button>
+        <button id="tableBtn" class="btn btn-secondary">📋 ТАБЛИЦА</button>
+    </div>
+    <div class="footer-note">✨ Неоновая галерея LEGENDA ✨</div>
+</div>
+
+<div id="tablePage" class="page">
+    <div class="card">
+
+        <!-- Мои покупки -->
+        <div class="my-orders-section" id="myOrdersSection" style="display:none;">
+            <div class="my-orders-header">👤 Мои покупки</div>
+            <div id="myOrdersList"></div>
+            <!-- Реферальный виджет -->
+            <div class="ref-block" id="refBlock" style="display:none;">
+                <div class="ref-label">🎁 Приглашай друзей — получи постер</div>
+                <div class="ref-progress-row">
+                    <span class="ref-count" id="refCount">0</span>
+                    <span class="ref-goal">/ 10 оплативших</span>
+                </div>
+                <div class="ref-bar-bg"><div class="ref-bar-fill" id="refBar"></div></div>
+                <div class="ref-hint" id="refHint"></div>
+                <div class="ref-link-box" id="refLinkBox" onclick="copyRefLink()">📋 Нажми чтобы скопировать ссылку</div>
+            </div>
+            <hr class="section-divider">
+        </div>
+
+        <button id="myOrdersBtn" class="btn btn-secondary" style="margin-bottom:14px;">👤 Мои покупки</button>
+
+        <h2 style="color:#0ff; margin-bottom: 10px; font-size:18px;">Участники LEGENDA</h2>
+        <div class="table-wrapper">
+            <table id="participantsTable">
+                <thead><tr><th>№</th><th>ФИО</th><th>Телефон</th><th>Статус</th></tr></thead>
+                <tbody id="tableBody"></tbody>
+            </table>
+        </div>
+        <div class="flex-btns" style="margin-top:14px;">
+            <button id="contactTeamBtn" class="btn btn-secondary">📞 Команда</button>
+            <button id="backToMainFromTable" class="btn btn-secondary">🏠 Главная</button>
+        </div>
+
+        <!-- Поиск по телефону — внизу страницы -->
+        <div id="myOrdersPhoneSearch" style="display:none; margin-top:18px; padding-top:14px; border-top:1px solid rgba(0,255,255,0.15);">
+            <div style="font-size:13px; color:#7ff; margin-bottom:8px;">🔍 Найти свои покупки по номеру телефона:</div>
+            <div class="my-orders-phone-row">
+                <input type="tel" id="myPhoneInput" placeholder="+7 999 123 45 67">
+                <button onclick="searchByPhone()">Найти</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="formPage" class="page">
+    <div class="card">
+        <h3 style="color:#0ff;">Оформление заказа LEGENDA</h3>
+        <input type="text" id="fullname" placeholder="ФИО (полностью)" autocomplete="off">
+        <input type="tel" id="phone" placeholder="Номер телефона">
+        <button id="submitFormBtn" class="btn btn-primary">✅ Продолжить оплату</button>
+        <button id="cancelFormBtn" class="btn btn-secondary">← Назад</button>
+    </div>
+</div>
+
+<div id="qrPage" class="page">
+    <div class="card">
+        <div class="bold-title" style="font-size:18px; margin-bottom:10px;">💳 ОПЛАТА ЗАКАЗА — 2 000 ₽</div>
+        <img src="legenda_bg.png" alt="LEGENDA" style="width:100%; border-radius:14px; object-fit:cover; max-height:220px; display:block; margin-bottom:12px;">
+        <div id="orderConfirm" style="display:none; background:rgba(0,255,100,0.08); border:1px solid #0f64; border-radius:16px; padding:10px 14px; margin-bottom:10px; font-size:14px; color:#0f9; text-align:center; font-weight:bold;"></div>
+        <button class="btn btn-primary" style="width:100%; font-size:17px; padding:14px 0; margin-bottom:8px; background:linear-gradient(135deg,#00b386,#007a5e); box-shadow:0 4px 20px rgba(0,200,130,0.35);" onclick="openSbpLink()">📲 СБП 2000</button>
+        <button class="btn btn-primary" style="width:100%; font-size:15px; padding:12px 0; margin-bottom:4px; background:linear-gradient(135deg,#1a6fa8,#0d4a72); box-shadow:0 4px 20px rgba(0,120,200,0.3);" onclick="openSbpLink2()">📲 СБП 2000 — резервная ссылка</button>
+        <div style="font-size:11px; color:#8aa; text-align:center; margin-bottom:2px;">Если первая кнопка не работает — используй эту</div>
+        <div style="background:rgba(255,160,0,0.08); border:1px solid rgba(255,160,0,0.35); border-radius:16px; padding:14px 16px; margin-top:10px; font-size:13px; color:#ffd; line-height:1.7;">
+            <div style="font-size:14px; font-weight:bold; color:#ffa040; margin-bottom:6px;">📱 Пользователям Android</div>
+            <div>Если в процессе оформления или оплаты возникли трудности — не переживай, напиши нам в техподдержку, разберёмся вместе.</div>
+            <div style="margin-top:10px;">
+                <button onclick="openSupport()" style="display:inline-block; background:rgba(255,160,0,0.15); border:1px solid rgba(255,160,0,0.4); border-radius:10px; padding:8px 16px; color:#ffa040; font-weight:bold; font-size:13px; cursor:pointer;">✉️ Написать в поддержку</button>
+            </div>
+        </div>
+        <div style="background:rgba(0,255,255,0.08); border:1px solid #0ff4; border-radius:16px; padding:14px 16px; margin-top:10px; font-size:13px; color:#cff; line-height:1.9;">
+            <div style="font-size:14px; font-weight:bold; color:#fff; margin-bottom:8px;">📋 Инструкция по оплате:</div>
+            <div>1️⃣ Нажми кнопку <b>«📲 СБП 2000»</b> выше</div>
+            <div>2️⃣ Выбери свой банк и подтверди оплату <b>2 000 ₽</b></div>
+            <div>3️⃣ В назначении платежа укажи: <b>«Оплата за товар»</b></div>
+            <div>4️⃣ После оплаты нажми <b>«Поделиться чеком»</b></div>
+            <div>5️⃣ Выбери <b>Telegram</b> → найди <b>этого бота</b> → отправь чек</div>
+        </div>
+        <button id="backToMainFromQr" class="btn btn-secondary" style="margin-top:14px;">← Главная</button>
+    </div>
+</div>
+
+<script>
+    let tg = window.Telegram?.WebApp;
+    let isTelegram = !!tg;
+    if (!isTelegram) {
+        tg = {
+            expand: () => {},
+            ready: () => {},
+            sendData: (data) => { console.log("Emulated sendData:", data); },
+            showPopup: (params) => { alert(params.title + "\n" + params.message); },
+            openTelegramLink: (url) => { window.open(url, '_blank'); },
+            openLink: (url) => { window.open(url, '_blank'); },
+            initDataUnsafe: {},
+            initData: ''
+        };
+    } else {
+        tg.expand();
+        // ready() вызываем в конце — после того как ID уже считан и закэширован
+    }
+
+    let participants = [];
+    let pendingBuyer = { fio: "", phone: "" };
+    let lastAssignedId = 0;
+
+    // Определяем реферальный ID из URL или start_param Telegram
+    function getRefOrderId() {
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('ref')) return parseInt(urlParams.get('ref'));
+        const startParam = tg?.initDataUnsafe?.start_param || '';
+        const m = startParam.match(/^ref_(\d+)$/);
+        if (m) return parseInt(m[1]);
+        return null;
+    }
+    const refOrderId = getRefOrderId();
+    if (refOrderId) sessionStorage.setItem('legenda_ref', refOrderId);
+
+    // Реферальная ссылка текущего пользователя (после покупки)
+    let myRefLink = null;
+
+    function copyRefLink() {
+        if (!myRefLink) return;
+        if (navigator.clipboard) {
+            navigator.clipboard.writeText(myRefLink).then(() => {
+                document.getElementById('refLinkBox').textContent = '✅ Скопировано!';
+                setTimeout(() => { document.getElementById('refLinkBox').textContent = myRefLink; }, 2000);
+            });
+        } else {
+            tg?.showPopup({ title: 'Ссылка', message: myRefLink, buttons: [{type:'ok'}] });
+        }
+    }
+
+    // Статус заказа → человекочитаемый текст + CSS класс
+    function orderStatusLabel(status) {
+        if (status === 'заказ принят') return { text: '✅ Принят', cls: 'ok' };
+        if (status === 'отклонён')    return { text: '❌ Отклонён', cls: 'no' };
+        return { text: '⏳ В модерации', cls: 'mod' };
+    }
+
+    // Рендерит карточки покупок и показывает секцию
+    function showMyOrders(orders) {
+        const section = document.getElementById('myOrdersSection');
+        const list = document.getElementById('myOrdersList');
+        const btn = document.getElementById('myOrdersBtn');
+        list.innerHTML = '';
+        if (!orders || orders.length === 0) {
+            list.innerHTML = '<div style="color:#7ff;font-size:13px;margin-bottom:8px;">Покупки не найдены.</div>';
+        } else {
+            orders.forEach(o => {
+                const sl = orderStatusLabel(o.status);
+                const date = o.created_at ? new Date(o.created_at).toLocaleDateString('ru-RU') : '—';
+                const bonus = o.is_bonus ? ' <span class="bonus-badge">БОНУСНЫЙ</span>' : '';
+                list.innerHTML += `
+                <div class="my-order-card">
+                    <div class="oc-row"><span class="oc-label">Заказ</span><span class="oc-val">#${o.id}${bonus}</span></div>
+                    <div class="oc-row"><span class="oc-label">ФИО</span><span class="oc-val">${o.fio}</span></div>
+                    <div class="oc-row"><span class="oc-label">Дата</span><span class="oc-val">${date}</span></div>
+                    <div class="oc-row"><span class="oc-label">Статус</span><span class="oc-val oc-status ${sl.cls}">${sl.text}</span></div>
+                </div>`;
+            });
+        }
+        section.style.display = 'block';
+        btn.style.display = 'none';
+        document.getElementById('myOrdersPhoneSearch').style.display = 'none';
+        // Загружаем реферальный виджет для первого не-бонусного заказа
+        const nonBonus = orders ? orders.find(o => !o.is_bonus) : null;
+        if (nonBonus) loadReferralWidgetForOrder(nonBonus.id);
+    }
+
+    async function loadReferralWidgetForOrder(orderId) {
+        try {
+            const resp = await fetch(`/api/shop/referrals?order_id=${orderId}`);
+            if (!resp.ok) return;
+            const data = await resp.json();
+            myRefLink = `https://t.me/LEGENDARYwrx_bot?start=ref_${orderId}`;
+            localStorage.setItem('legenda_my_order_id', String(orderId));
+            const block = document.getElementById('refBlock');
+            block.style.display = 'block';
+            document.getElementById('refCount').textContent = data.progress;
+            document.getElementById('refBar').style.width = (data.progress / data.needed * 100) + '%';
+            document.getElementById('refLinkBox').textContent = myRefLink;
+            const remaining = data.needed - data.progress;
+            document.getElementById('refHint').textContent = data.bonuses > 0
+                ? `🏆 Получено бонусных постеров: ${data.bonuses}. До следующего: ещё ${remaining} друзей`
+                : `До бесплатного постера: ещё ${remaining} оплативших друзей`;
+        } catch (e) {}
+    }
+
+    // Ищет покупки по Telegram ID (каждый раз заново, без кеша)
+    async function loadMyOrders() {
+        const userId = getTelegramUserId();
+        if (userId) {
+            try {
+                const resp = await fetch(`/api/shop/my-orders?user_id=${userId}`);
+                if (resp.ok) {
+                    const orders = await resp.json();
+                    showMyOrders(orders);
+                    return;
+                }
+            } catch (e) {}
+        }
+        // Telegram ID не дал результата — показываем поиск по телефону
+        document.getElementById('myOrdersBtn').style.display = 'none';
+        document.getElementById('myOrdersPhoneSearch').style.display = 'block';
+    }
+
+    // Поиск по номеру телефона (ручной ввод)
+    async function searchByPhone() {
+        const phone = document.getElementById('myPhoneInput').value.trim();
+        if (phone.length < 6) return;
+        try {
+            const resp = await fetch(`/api/shop/my-orders?phone=${encodeURIComponent(phone)}`);
+            if (resp.ok) {
+                const orders = await resp.json();
+                showMyOrders(orders);
+            } else {
+                document.getElementById('myOrdersPhoneSearch').insertAdjacentHTML('beforeend',
+                    '<div style="color:#f88;font-size:13px;margin-top:6px;">Покупки не найдены. Проверь номер.</div>');
+            }
+        } catch (e) {}
+    }
+
+    async function resolveMyOrderId() {
+        const stored = localStorage.getItem('legenda_my_order_id');
+        if (stored) return stored;
+        const userId = getTelegramUserId();
+        if (!userId) return null;
+        try {
+            const resp = await fetch(`/api/shop/my-order?user_id=${userId}`);
+            if (!resp.ok) return null;
+            const data = await resp.json();
+            if (data.order_id) {
+                localStorage.setItem('legenda_my_order_id', String(data.order_id));
+                return String(data.order_id);
+            }
+        } catch (e) {}
+        return null;
+    }
+
+    function maskPhone(phone) {
+        const digits = phone.replace(/\D/g, '');
+        if (digits.length < 6) return phone;
+        const visible_start = digits.slice(0, 2);
+        const visible_end = digits.slice(-4);
+        const stars = '*'.repeat(digits.length - 6);
+        return visible_start + stars + visible_end;
+    }
+
+    function renderTable() {
+        const tbody = document.getElementById('tableBody');
+        tbody.innerHTML = '';
+        if (participants.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">Пока ни одного участника</td></tr>';
+            return;
+        }
+        participants.forEach(p => {
+            const row = tbody.insertRow();
+            row.insertCell(0).innerText = p.id;
+            let shortName = p.fio;
+            if (p.fio.split(' ').length >= 2) {
+                let parts = p.fio.split(' ');
+                let surname = parts[0];
+                let initials = parts.slice(1).map(n => n.charAt(0).toUpperCase() + '.').join('');
+                shortName = surname + ' ' + initials;
+            }
+            const nameCell = row.insertCell(1);
+            nameCell.innerText = shortName;
+            if (p.is_bonus) nameCell.innerHTML += ' <span class="bonus-badge">БОНУСНЫЙ</span>';
+            row.insertCell(2).innerText = maskPhone(p.phone);
+            let statusClass = '', statusLabel = '';
+            if (p.status === 'в модерации')  { statusClass = 'moderating'; statusLabel = '⏳'; }
+            else if (p.status === 'заказ принят') { statusClass = 'approved';   statusLabel = '✅'; }
+            else if (p.status === 'отклонён')     { statusClass = 'rejected';   statusLabel = '❌'; }
+            else statusLabel = p.status;
+            row.insertCell(3).innerHTML = `<span class="status ${statusClass}" title="${p.status}">${statusLabel}</span>`;
+        });
+    }
+
+    async function loadCounter() {
+        try {
+            const resp = await fetch('/api/shop/stats');
+            if (!resp.ok) return;
+            const data = await resp.json();
+            const remaining = data.remaining;
+            const confirmed = data.confirmed;
+            const total = data.total;
+            const pct = Math.min(100, (confirmed / total) * 100);
+            document.getElementById('counterRemaining').textContent = remaining.toLocaleString('ru-RU');
+            document.getElementById('counterBar').style.width = pct + '%';
+            document.getElementById('counterTaken').textContent = `Уже забронировано: ${confirmed} из ${total.toLocaleString('ru-RU')}`;
+        } catch (e) {}
+    }
+    loadCounter();
+
+    async function loadParticipants() {
+        try {
+            const resp = await fetch('/api/shop/orders');
+            if (!resp.ok) throw new Error('fetch failed');
+            const data = await resp.json();
+            participants = data.map(o => ({ id: o.id, fio: o.fio, phone: o.phone, status: o.status, is_bonus: o.is_bonus }));
+            lastAssignedId = participants.length ? Math.max(...participants.map(p => p.id)) : 0;
+        } catch (e) {
+            const stored = localStorage.getItem('legenda_participants');
+            if (stored) {
+                participants = JSON.parse(stored);
+                lastAssignedId = participants.length ? Math.max(...participants.map(p => p.id)) : 0;
+            }
+        }
+        renderTable();
+    }
+
+    function saveParticipants() {
+        localStorage.setItem('legenda_participants', JSON.stringify(participants));
+    }
+
+    function addParticipant(fio, phone, assignedId, status = 'ждет товар') {
+        participants.push({ id: assignedId, fio, phone, status });
+        saveParticipants();
+        renderTable();
+    }
+
+    function showPage(pageId) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById(pageId).classList.add('active');
+        if (pageId === 'tablePage') {
+            loadParticipants();
+            // Сбрасываем секцию "Мои покупки" и автоматически пробуем загрузить
+            document.getElementById('myOrdersSection').style.display = 'none';
+            document.getElementById('myOrdersPhoneSearch').style.display = 'none';
+            document.getElementById('myOrdersBtn').style.display = 'block';
+            loadMyOrders();
+        }
+    }
+
+    function processStartParam() {
+        if (tg && tg.initDataUnsafe && tg.initDataUnsafe.start_param) {
+            const param = tg.initDataUnsafe.start_param;
+            const match = param.match(/^order_(\d+)_(approved|rejected)$/);
+            if (match) {
+                const orderId = parseInt(match[1]);
+                const newStatus = match[2] === 'approved' ? 'заказ принят' : 'отклонён';
+                participants.forEach(p => {
+                    if (p.id === orderId) p.status = newStatus;
+                });
+                saveParticipants();
+                renderTable();
+            }
+        }
+    }
+
+    // Получаем Telegram user_id — три способа + кэш в localStorage
+    function getTelegramUserId() {
+        // Способ 1: initDataUnsafe (стандартный)
+        if (tg?.initDataUnsafe?.user?.id) {
+            const id = tg.initDataUnsafe.user.id;
+            localStorage.setItem('legenda_tg_uid', String(id));
+            return id;
+        }
+        // Способ 2: парсим initData строку напрямую (надёжнее на iOS)
+        try {
+            const params = new URLSearchParams(tg?.initData || '');
+            const userStr = params.get('user');
+            if (userStr) {
+                const user = JSON.parse(userStr);
+                if (user.id) {
+                    localStorage.setItem('legenda_tg_uid', String(user.id));
+                    return user.id;
+                }
+            }
+        } catch (e) {}
+        // Способ 3: кэш из localStorage (работает при перезагрузке внутри одной сессии)
+        const cached = localStorage.getItem('legenda_tg_uid');
+        if (cached && cached !== '0') return parseInt(cached, 10);
+        return null;
+    }
+
+    // Читаем и кэшируем ID сразу при старте — до любых действий пользователя
+    (function initTelegramId() {
+        getTelegramUserId();
+    })();
+
+    // Создаёт заявку через API ДО оплаты — чтобы PDF из банка принимался сразу
+    async function createOrderViaAPI(fio, phone) {
+        const userId = getTelegramUserId() || 0;
+        const referred_by = sessionStorage.getItem('legenda_ref') || null;
+        try {
+            const resp = await fetch('/api/shop/orders', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ user_id: userId, fio, phone, referred_by })
+            });
+            if (!resp.ok) throw new Error('API error');
+            const data = await resp.json();
+            if (data.order_id) {
+                localStorage.setItem('legenda_my_order_id', data.order_id);
+            }
+            return { order_id: data.order_id };
+        } catch (e) {
+            return {};
+        }
+    }
+
+    document.getElementById('buyBtn').onclick = () => showPage('formPage');
+    document.getElementById('tableBtn').onclick = () => showPage('tablePage');
+    document.getElementById('contactTeamBtn').onclick = () => tg.openTelegramLink('https://t.me/Prim_JDM_corporation');
+    document.getElementById('backToMainFromTable').onclick = () => showPage('mainPage');
+    document.getElementById('backToMainFromQr').onclick = () => showPage('mainPage');
+    document.getElementById('myOrdersBtn').onclick = () => loadMyOrders();
+
+    function openPaymentLink() {
+        const url = 'https://qr.nspk.ru/BD10002O34B8P4969GLA72OJ5UEERK6V';
+        if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.openLink) {
+            window.Telegram.WebApp.openLink(url);
+        } else {
+            window.open(url, '_blank');
+        }
+    }
+
+    function openSbpLink() {
+        const url = 'https://avtoservisoplata.tb.ru/';
+        if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.openLink) {
+            window.Telegram.WebApp.openLink(url);
+        } else {
+            window.open(url, '_blank');
+        }
+    }
+
+    function openSbpLink2() {
+        const url = 'https://qr.nspk.ru/AS1A004D5H4FBQBF8T0A51NDSLKBH7V9';
+        if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.openLink) {
+            window.Telegram.WebApp.openLink(url);
+        } else {
+            window.open(url, '_blank');
+        }
+    }
+
+    function openSupport() {
+        const url = 'https://t.me/Prim_JDM_corporation';
+        if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.openTelegramLink) {
+            window.Telegram.WebApp.openTelegramLink(url);
+        } else {
+            window.open(url, '_blank');
+        }
+    }
+    document.getElementById('cancelFormBtn').onclick = () => showPage('mainPage');
+
+    document.getElementById('submitFormBtn').onclick = async () => {
+        const fio = document.getElementById('fullname').value.trim();
+        const phone = document.getElementById('phone').value.trim();
+        if (!fio || !phone) {
+            tg.showPopup({ title: 'Ошибка', message: 'Заполните ФИО и телефон', buttons: [{type: 'ok'}] });
+            return;
+        }
+
+        pendingBuyer = { fio, phone };
+
+        const btn = document.getElementById('submitFormBtn');
+        btn.textContent = '⏳ Создаём заявку...';
+        btn.disabled = true;
+
+        const result = await createOrderViaAPI(fio, phone);
+
+        btn.textContent = '✅ Продолжить оплату';
+        btn.disabled = false;
+
+        showPage('qrPage');
+
+        const confirm = document.getElementById('orderConfirm');
+        if (result && result.order_id) {
+            const hasId = !!getTelegramUserId();
+            if (hasId) {
+                confirm.innerHTML = `✅ <b>Заявка #${result.order_id} создана</b><br>Оплатите и отправьте скриншот чека боту @LEGENDARYwrx_bot`;
+            } else {
+                // Android / браузер — Telegram ID не получен, работаем через телефон
+                confirm.innerHTML =
+                    `✅ <b>Заявка #${result.order_id} создана</b><br><br>` +
+                    `📱 <b>Важно:</b> Оплатите и отправьте скриншот чека боту <b>@LEGENDARYwrx_bot</b><br><br>` +
+                    `Если бот попросит номер телефона — введи <b>${pendingBuyer.phone}</b> (тот же что в заявке). ` +
+                    `Тогда заявка найдётся и ты получишь постер.`;
+            }
+            confirm.style.display = 'block';
+        }
+    };
+
+    loadParticipants();
+    processStartParam();
+    // Сигнализируем Telegram что WebApp готов — только после кэширования user_id
+    if (isTelegram) tg.ready();
+</script>
+</body>
+</html>
