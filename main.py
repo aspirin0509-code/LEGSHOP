@@ -17,7 +17,7 @@ ADMIN_CHAT_ID = 1353106724
 BOT_USERNAME = "LEGENDARYwrx_bot"
 
 WEBAPP_URL = os.environ.get("WEBAPP_URL", "")
-PORT = int(os.environ.get("PORT", "8443"))
+PORT = int(os.environ.get("PORT", "8080"))
 WEBHOOK_PATH = os.environ.get("WEBHOOK_PATH", "/api/telegram")
 WEBHOOK_URL = os.environ.get("WEBHOOK_URL", "")
 print(f"[BOT] WEBAPP_URL={WEBAPP_URL} PORT={PORT} WEBHOOK_URL={WEBHOOK_URL}")
