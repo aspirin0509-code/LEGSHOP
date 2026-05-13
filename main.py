@@ -1600,8 +1600,12 @@ flask_app = Flask(__name__)
 @flask_app.route("/")
 def home():
     return "LEGSHOP WORKING"
-
+def run_bot():
+    print("[BOT] START POLLING")
+    app.run_polling(drop_pending_updates=True)
+#-------------START---------    
 if __name__ == "__main__":
+    Thread(target=run_bot, daemon=True).start()
     flask_app.run(
         host="0.0.0.0",
         port=int(os.environ.get("PORT", 8080))
