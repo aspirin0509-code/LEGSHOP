@@ -24,7 +24,6 @@ logger = logging.getLogger(__name__)
 
 def get_db():
     return psycopg2.connect(os.environ['DATABASE_URL'])
-
 def db_create_order(user_id, fio, phone):
     conn = get_db()
     try:
@@ -1624,8 +1623,7 @@ def main():
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_phone_lookup))
     app.add_handler(CallbackQueryHandler(callback_query))
     
-    
-flask_app = Flask(__name__)
+    flask_app = Flask(__name__)
 @flask_app.route("/")
 def home():
     with open("mini_app/index.html", encoding="utf-8") as f:
