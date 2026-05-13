@@ -1646,7 +1646,6 @@ def main():
         )
      else:
          print("[BOT] Polling mode. WEBHOOK_URL not set.")
-         
          web_thread = Thread(
              target=flask_app.run,
              kwargs={
@@ -1654,12 +1653,11 @@ def main():
                  "port": PORT,
                  "debug": False,
                  "use_reloader": False
-                },
-                daemon=True
-            )
+             },
+             daemon=True
+         )
          web_thread.start()
          print("[WEB] Flask started")
          app.run_polling(drop_pending_updates=True)
-       
-    if __name__ == "__main__":
+if __name__ == "__main__":
     main()
