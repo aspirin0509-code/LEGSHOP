@@ -12,7 +12,7 @@ flask_app = Flask(__name__)
 
 @flask_app.route("/")
 def home():
-    return "OK"
+    return "LEGSHOP WORKING"
 
 TOKEN = os.environ.get('TELEGRAM_BOT_TOKEN')
 ADMIN_CHAT_ID = 1353106724
@@ -1632,8 +1632,7 @@ def main():
     app.add_handler(CallbackQueryHandler(callback_query))
     
     def home():
-        with open("mini_app/index.html", encoding="utf-8") as f:
-            return f.read()
+        return "LEGSHOP WORKING"
     if WEBHOOK_URL:
         print(f"[BOT] Webhook mode. URL={WEBHOOK_URL} port={PORT}")
         
