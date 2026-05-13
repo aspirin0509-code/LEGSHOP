@@ -1602,6 +1602,28 @@ def home():
     return "LEGSHOP WORKING"
 def run_bot():
     print("[BOT] START POLLING")
+    app = Application.builder().token(TOKEN).build()
+    app.add_handler(CommandHandler("start", start))
+    app.add_handler(CommandHandler("help", help_command))
+    app.add_handler(CommandHandler("orders", orders_command))
+    app.add_handler(CommandHandler("order", order_detail_command))
+    app.add_handler(CommandHandler("resetorders", resetorders_command))
+    app.add_handler(CommandHandler("stats", stats_command))
+    app.add_handler(CommandHandler("export", export_command))
+    app.add_handler(CommandHandler("find", find_command))
+    app.add_handler(CommandHandler("renotify", renotify_command))
+    app.add_handler(MessageHandler(filters.Regex(r'^/renotify\d+'), renotify_command))
+    app.add_handler(CommandHandler("sendposter", sendposter_command))
+    app.add_handler(MessageHandler(filters.Regex(r'^/sendposter\d+'), sendposter_command))
+    app.add_handler(CommandHandler("sendreflinks", sendreflinks_command))
+    app.add_handler(CommandHandler("resetphoto", resetphoto_command))
+    app.add_handler(CommandHandler("clearunpaid", clearunpaid_command))
+    app.add_handler(MessageHandler(filters.StatusUpdate.WEB_APP_DATA, handle_webapp_data))
+    app.add_handler(MessageHandler(filters.TEXT & filters.Regex(r"^/start\\s+order_"), handle_webapp_data))
+    app.add_handler(MessageHandler(filters.PHOTO, handle_photo))
+    app.add_handler(MessageHandler(filters.Document.PDF, handle_document))
+    app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_phone_lookup))
+    app.add_handler(CallbackQueryHandler(callback_query))
     app.run_polling(drop_pending_updates=True)
 #-------------START---------    
 if __name__ == "__main__":
