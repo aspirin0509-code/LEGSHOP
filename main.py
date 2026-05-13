@@ -1603,7 +1603,7 @@ def home():
 def run_bot():
     import asyncio
     loop = asyncio.new_event_loop()
-    asyncio.cet_event_loop(loop)
+    asyncio.set_event_loop(loop)
     print("[BOT] START POLLING")
     app = Application.builder().token(TOKEN).build()
     app.add_handler(CommandHandler("start", start))
