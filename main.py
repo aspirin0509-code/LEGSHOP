@@ -1630,32 +1630,19 @@ def main():
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_phone_lookup))
     app.add_handler(CallbackQueryHandler(callback_query))
     
+    print("[BOT] START POLLING")
+    app.run_polling(drop_pending_updates=True)
     
-    if WEBHOOK_URL:
-        print(f"[BOT] Webhook mode. URL={WEBHOOK_URL} port={PORT}")
-        
-        app.run_webhook(
-            listen="0.0.0.0",
-            port=PORT,
-            url_path=WEBHOOK_PATH,
-            webhook_url=WEBHOOK_URL,
-            drop_pending_updates=False,
-        )
-    else:
-         print("[WEB] Starting Flask...")
-         Thread().start()
-         print("[WEB] Flask started")
-         app.run_polling(drop_pending_updates=True)
-if __name__ == "__main__":
-    from threading import Thread
-    Thread(
-        target=lambda: flask_app.run(
-                 host="0.0.0.0",
-                 port=PORT,
-                 debug=False,
-                 use_reloader=False
-             ),
-             daemon=True
+    if __name__ == "__main__":
+    
+    Thread(target=main, deamon=True).start()
+    print("[WEB] START FLASK")
+    flask_app.run(
+        host="0.0.0.0",
+        port=int(os.environ.get("PORT", 8080))
+        debug=False
+    ),
+             
          ).start()
     main()
 
