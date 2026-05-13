@@ -1605,7 +1605,16 @@ def home():
 @flask_app.route("/<path:filename>")
 def static_files(filename):
     return send_from_directory(MINI_APP_DIR, filename)
+def run_bot():
+    print("[BOT] START POLLING")
+    import asyncio
+    
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    bot_app.bot.delete_webhook(drop_pending_updates=True)
+    bot_app.run_pulling()
 bot_app = Application.builder().token(TOKEN).build()
+
 bot_app.add_handler(CommandHandler("start", start))
 bot_app.add_handler(CommandHandler("help", help_command))
 bot_app.add_handler(CommandHandler("orders", orders_command))
@@ -1628,14 +1637,6 @@ bot_app.add_handler(MessageHandler(filters.Document.PDF, handle_document))
 bot_app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_phone_lookup))
 bot_app.add_handler(CallbackQueryHandler(callback_query))
     
-def run_bot():
-    print("[BOT] START POLLING")
-    import asyncio
-    
-    loop = asyncio.new_event_loop()
-    asyncio.set_event_loop(loop)
-    bot_app.bot.delete_webhook(drop_pending_updates=True)
-    bot_app.run_pulling()
 #-------------START---------    
 if __name__ == "__main__":
     Thread(target=run_bot, daemon=True).start()
