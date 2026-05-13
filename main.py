@@ -4,6 +4,7 @@ import psycopg2.extras
 
 from flask import Flask, send_from_directory
 BASE_DIR =os.path.dirname(os.path.abspath(__file__))
+MINI_APP_DIR = os.path.join(BASE_DIR, "mini_app")
 from threading import Thread
 from PIL import Image, ImageDraw, ImageFont
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, KeyboardButton, ReplyKeyboardMarkup, WebAppInfo
@@ -1603,12 +1604,12 @@ def home():
     return send_from_directory("mini_app", "index.html")
     @flask_app.route("/<path:filename>")
     def static_files(filename):
-        return send_from_directory(".", filename)
+        return send_from_directory(MINI_APP_DIR, filename, "index.html")
 def run_bot():
     import asyncio
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
-    loop.run_until_complite(
+    loop.run_until_complete(
         app.bot.delete_webhook(drop_pending_updates=True)
     )
     print("[BOT] START POLLING")
