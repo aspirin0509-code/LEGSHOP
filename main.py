@@ -1634,30 +1634,32 @@ def main():
     def home():
         with open("mini_app/index.html", encoding="utf-8") as f:
             return f.read()
-        if WEBHOOK_URL:
-            print(f"[BOT] Webhook mode. URL={WEBHOOK_URL} port={PORT}")
-            app.run_webhook(
-                listen="0.0.0.0",
-                port=PORT,
-                url_path=WEBHOOK_PATH,
-                webhook_url=WEBHOOK_URL,
-                drop_pending_updates=False,
-            )
-        else:
-            print("[BOT] Polling mode. WEBHOOK_URL not set.")
-            web_thread = Thread(
-                target=flask_app.run,
-                kwargs={
-                    "host": "0.0.0.0",
-                    "port": PORT,
-                    "debug": False,
-                    "use_reloader": False
+    if WEBHOOK_URL:
+        print(f"[BOT] Webhook mode. URL={WEBHOOK_URL} port={PORT}")
+        
+        app.run_webhook(
+            listen="0.0.0.0",
+            port=PORT,
+            url_path=WEBHOOK_PATH,
+            webhook_url=WEBHOOK_URL,
+            drop_pending_updates=False,
+        )
+     else:
+         print("[BOT] Polling mode. WEBHOOK_URL not set.")
+         
+         web_thread = Thread(
+             target=flask_app.run,
+             kwargs={
+                 "host": "0.0.0.0",
+                 "port": PORT,
+                 "debug": False,
+                 "use_reloader": False
                 },
                 daemon=True
             )
-            web_thread.start()
-            print("[WEB] Flask started")
-            app.run_polling(drop_pending_updates=True)
+         web_thread.start()
+         print("[WEB] Flask started")
+         app.run_polling(drop_pending_updates=True)
        
-if __name__ == "__main__":
+    if __name__ == "__main__":
     main()
