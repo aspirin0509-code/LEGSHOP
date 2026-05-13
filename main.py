@@ -1594,6 +1594,7 @@ async def resetphoto_command(update: Update, context: ContextTypes.DEFAULT_TYPE)
 # ---------- ЗАПУСК (webhook режим) ----------
 
 def main():
+    print("MAIN STARTED")
     if not TOKEN:
         print("ОШИБКА: не найден токен TELEGRAM_BOT_TOKEN в секретах")
         return
