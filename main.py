@@ -1601,9 +1601,6 @@ flask_app = Flask(__name__)
 def home():
     return "LEGSHOP WORKING"
 
-    print("[BOT] START POLLING")
-    app.run_polling(drop_pending_updates=True)
-    
     if __name__ == "__main__":
         flask_app.run(
             host="0.0.0.0",
