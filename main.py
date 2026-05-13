@@ -3,7 +3,7 @@ import psycopg2
 import psycopg2.extras
 from flask import Flask
 from threading import Thread
- from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw, ImageFont
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, KeyboardButton, ReplyKeyboardMarkup, WebAppInfo
 from telegram.ext import Application, CommandHandler, MessageHandler, CallbackQueryHandler, filters, ContextTypes
 
