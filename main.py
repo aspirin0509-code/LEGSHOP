@@ -1651,7 +1651,7 @@ def main():
                  port=PORT,
                  debug=False,
                  use_reloader=False
-             },
+             ),
              daemon=True
          ).start()
          print("[WEB] Flask started")
