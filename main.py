@@ -1624,6 +1624,7 @@ def main():
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_phone_lookup))
     app.add_handler(CallbackQueryHandler(callback_query))
     
+    
 flask_app = Flask(__name__)
 @flask_app.route("/")
 def home():
@@ -1653,7 +1654,7 @@ def home():
         web_thread.start()
         print("[WEB] Flask started")
         app.run_polling(drop_pending_updates=True)
+        app.run_polling()
        
-
 if __name__ == '__main__':
     main()
