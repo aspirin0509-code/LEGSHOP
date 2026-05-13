@@ -1641,11 +1641,19 @@ def main():
             webhook_url=WEBHOOK_URL,
             drop_pending_updates=False,
         )
-    
+    else:
+         print("[WEB] Starting Flask...")
+         Thread(
+             target=lambda: flask_app.run(
+                 host="0.0.0.0",
+                 port=PORT,
+                 debug=False,
+                 use_reloader=False
+             ),
+             daemon=True
+         ).start()
+         print("[WEB] Flask started")
+         app.run_polling(drop_pending_updates=True)
 if __name__ == "__main__":
-    # main()
-    flask_app.run(
-        host="0.0.0.0",
-        port=PORT,
-        debug=False
-    )
+     main()
+
