@@ -1596,7 +1596,11 @@ async def resetphoto_command(update: Update, context: ContextTypes.DEFAULT_TYPE)
 
 
 # ---------- ЗАПУСК (webhook режим) ----------
+flask_app = Flask(__name__)
 
+    @flask_app.route("/")
+    def home():
+        return "LEGSHOP WORKING"
 def main():
     print("MAIN STARTED")
     if not TOKEN:
@@ -1626,11 +1630,7 @@ def main():
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_phone_lookup))
     app.add_handler(CallbackQueryHandler(callback_query))
     
-    flask_app = Flask(__name__)
-
-    @flask_app.route("/")
-    def home():
-        return "LEGSHOP WORKING"
+    
     if WEBHOOK_URL:
         print(f"[BOT] Webhook mode. URL={WEBHOOK_URL} port={PORT}")
         
