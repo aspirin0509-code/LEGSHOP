@@ -1610,6 +1610,7 @@ def run_bot():
     asyncio.set_event_loop(loop)
     loop.run_until_complite(
         app.bot.delete_webhook(drop_pending_updates=True)
+    )
     print("[BOT] START POLLING")
     app = Application.builder().token(TOKEN).build()
     app.add_handler(CommandHandler("start", start))
