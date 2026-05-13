@@ -1632,15 +1632,14 @@ def home():
     
 def run_bot():
     import asyncio
+    
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
     
     loop.run_until_complete(
-        bot_app.bot.delete_webhook(drop_pending_updates=True)
+    bot_app.bot.delete_webhook(drop_pending_updates=True)
     )
-     bot_app.run_polling(close_loop=False)
-    
-    print("[BOT] START POLLING")
+    bot_app.run_polling(close_loop=False)
 #-------------START---------    
 if __name__ == "__main__":
     Thread(target=run_bot, daemon=True).start()
