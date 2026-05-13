@@ -1597,7 +1597,6 @@ async def resetphoto_command(update: Update, context: ContextTypes.DEFAULT_TYPE)
 
 # ---------- ЗАПУСК (webhook режим) ----------
 flask_app = Flask(__name__)
-
 @flask_app.route("/")
 def home():
     return "LEGSHOP WORKING"
@@ -1644,8 +1643,13 @@ def main():
         )
     else:
          print("[WEB] Starting Flask...")
-         Thread(
-             target=lambda: flask_app.run(
+         Thread().start()
+         print("[WEB] Flask started")
+         app.run_polling(drop_pending_updates=True)
+if __name__ == "__main__":
+    from threading import Thread
+    Thread(
+        target=lambda: flask_app.run(
                  host="0.0.0.0",
                  port=PORT,
                  debug=False,
@@ -1653,8 +1657,5 @@ def main():
              ),
              daemon=True
          ).start()
-         print("[WEB] Flask started")
-         app.run_polling(drop_pending_updates=True)
-if __name__ == "__main__":
      main()
 
