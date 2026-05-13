@@ -1611,8 +1611,10 @@ def run_bot():
     
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
-    bot_app.bot.delete_webhook(drop_pending_updates=True)
-    bot_app.run_pulling()
+    loop.run_until_complite(
+        bot_app.bot.delete_webhook(drop_pending_updates=True)
+    )
+    bot_app.run_polling(drop_pending_updates=True)
 bot_app = Application.builder().token(TOKEN).build()
 
 bot_app.add_handler(CommandHandler("start", start))
