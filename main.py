@@ -2,7 +2,8 @@ import os, json, logging, csv, io
 import psycopg2
 import psycopg2.extras
 
-from flask import Flask
+from flask import Flask, send_from_directory
+BASE_DIR =os.path.dirname(os.path.abspath(__file__))
 from threading import Thread
 from PIL import Image, ImageDraw, ImageFont
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, KeyboardButton, ReplyKeyboardMarkup, WebAppInfo
