@@ -1606,7 +1606,7 @@ def home():
     def static_files(filename):
         return send_from_directory(MINI_APP_DIR, filename, "index.html")
 
-    app = Application.builder().token(TOKEN).build()
+    bot_app = Application.builder().token(TOKEN).build()
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CommandHandler("help", help_command))
     app.add_handler(CommandHandler("orders", orders_command))
@@ -1637,7 +1637,7 @@ def run_bot():
     asyncio.set_event_loop(loop)
     
     loop.run_until_complete(
-    app.bot.delete_webhook(drop_pending_updates=True)
+    bot_app.bot.delete_webhook(drop_pending_updates=True)
     )
     app.run_polling(close_loop=False)
 #-------------START---------    
