@@ -1599,7 +1599,10 @@ async def resetphoto_command(update: Update, context: ContextTypes.DEFAULT_TYPE)
 flask_app = Flask(__name__)
 @flask_app.route("/")
 def home():
-    return render_mini_app("index.html")
+    return send_from_directory("mini_app", "index.html")
+    @flask_app.route("/<path:filename>")
+    def static_files(filename):
+        return send_from_directory(".", filename)
 def run_bot():
     import asyncio
     loop = asyncio.new_event_loop()
