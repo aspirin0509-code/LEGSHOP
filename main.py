@@ -1635,7 +1635,7 @@ def run_bot():
     
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
-    )
+    
     loop.run_until_complete(
         bot_app.bot.delete_webhook(drop_pending_updates=True)
     )
