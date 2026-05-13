@@ -3,11 +3,6 @@ import psycopg2
 import psycopg2.extras
 from flask import Flask
 from threading import Thread
-flask_app = Flask(__name__)
-@flask_app.route("/")
-def home():
-    with open("mini_app/index.html", encoding="utf-8") as f:
-        return f.read()
 from PIL import Image, ImageDraw, ImageFont
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, KeyboardButton, ReplyKeyboardMarkup, WebAppInfo
 from telegram.ext import Application, CommandHandler, MessageHandler, CallbackQueryHandler, filters, ContextTypes
@@ -1645,16 +1640,20 @@ def home():
         )
     else:
         print("[BOT] Polling mode. WEBHOOK_URL not set.")
-        THread(
+        web_thread = Thread(
             target=flask_app.run,
             kwargs={
                 "host": "0.0.0.0",
                 "port": PORT,
                 "debug": False,
                 "use_reloader": False
-            }
-        ).start()
-        app.run_polling()
+            },
+            daemon=True
+        )
+        web_thread.start()
+        print("[WEB] Flask started")
+        app.run_polling(drop_pending_updates=True)
+       
 
 if __name__ == '__main__':
     main()
