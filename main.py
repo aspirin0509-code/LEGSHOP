@@ -1652,7 +1652,6 @@ def home():
         web_thread.start()
         print("[WEB] Flask started")
         app.run_polling(drop_pending_updates=True)
-        app.run_polling()
        
 if __name__ == '__main__':
     main()
