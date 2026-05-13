@@ -1634,7 +1634,7 @@ def main():
     app.run_polling(drop_pending_updates=True)
     
     if __name__ == "__main__":
-        Thread(target=main, deamon=True).start()
+        Thread(target=main, daemon=True).start()
         print("[WEB] START FLASK")
         flask_app.run(
             host="0.0.0.0",
