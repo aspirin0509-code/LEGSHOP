@@ -1640,9 +1640,15 @@ def home():
         )
     else:
         print("[BOT] Polling mode. WEBHOOK_URL not set.")
-        def run_web():
-            flask_app.run(host="0.0.0.0",port=PORT)
-            Thread(target=run_web).start()
+        THread(
+            target=flask_app.run,
+            kwargs={
+                "host": "0.0.0.0",
+                "port": PORT,
+                "debug": False,
+                "use_reloader": False
+            }
+        ).start()
         app.run_polling()
 
 if __name__ == '__main__':
