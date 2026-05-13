@@ -1599,14 +1599,14 @@ async def resetphoto_command(update: Update, context: ContextTypes.DEFAULT_TYPE)
 
 # ---------- ЗАПУСК (webhook режим) ----------
 flask_app = Flask(__name__)
-@flask_app.route("/")
+@flask_app.route('/mini_app/<path:filename>')
 def home():
     return send_from_directory("mini_app", "index.html")
     @flask_app.route("/<path:filename>")
     def static_files(filename):
         return send_from_directory(MINI_APP_DIR, filename, "index.html")
 
-    app = Application.builder().token(TOKEN).build()
+    bot_app = Application.builder().token(TOKEN).build()
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CommandHandler("help", help_command))
     app.add_handler(CommandHandler("orders", orders_command))
@@ -1628,13 +1628,19 @@ def home():
     app.add_handler(MessageHandler(filters.Document.PDF, handle_document))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_phone_lookup))
     app.add_handler(CallbackQueryHandler(callback_query))
+    print("[BOT] START POLLING")
+    
 def run_bot():
     import asyncio
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
+    
     loop.run_until_complete(
+        bot_app.run_polling(
         app.bot.delete_webhook(drop_pending_updates=True)
+            close_loop=False
     )
+)
     print("[BOT] START POLLING")
 #-------------START---------    
 if __name__ == "__main__":
