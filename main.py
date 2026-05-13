@@ -1614,7 +1614,12 @@ def run_bot():
     loop.run_until_complete(
         bot_app.bot.delete_webhook(drop_pending_updates=True)
     )
-    bot_app.run_polling(drop_pending_updates=True)
+    print("[BOT] START POLLING")
+    bot_app.run_polling(
+        drop_pending_updates=True,
+        close_loop=False,
+        stop_signals=None
+    )
 bot_app = Application.builder().token(TOKEN).build()
 
 bot_app.add_handler(CommandHandler("start", start))
