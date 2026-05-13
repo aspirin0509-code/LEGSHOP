@@ -1639,7 +1639,7 @@ def run_bot():
     loop.run_until_complete(
     bot_app.bot.delete_webhook(drop_pending_updates=True)
     )
-    app.run_polling(close_loop=False)
+    app.run_polling(drop_pending_updates=True)
 #-------------START---------    
 if __name__ == "__main__":
     Thread(target=run_bot, daemon=True).start()
