@@ -1628,7 +1628,7 @@ def run_bot():
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_phone_lookup))
     app.add_handler(CallbackQueryHandler(callback_query))
     app.run_polling(
-        drop_pending_updates=True
+        drop_pending_updates=True,
         stop_signals=None
     )
 #-------------START---------    
