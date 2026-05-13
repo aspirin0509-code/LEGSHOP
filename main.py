@@ -1599,7 +1599,7 @@ async def resetphoto_command(update: Update, context: ContextTypes.DEFAULT_TYPE)
 
 # ---------- ЗАПУСК (webhook режим) ----------
 flask_app = Flask(__name__)
-@flask_app.route("/")
+@flask_app.route('/mini_app/,path;filename.')
 def home():
     return send_from_directory("mini_app", "index.html")
 @flask_app.route("/<path:filename>")
