@@ -3,7 +3,7 @@ import psycopg2
 import psycopg2.extras
 from flask import Flask
 from threading import Thread
-    flask_app = Flask(__name__)
+flask_app = Flask(__name__)
 @flask_app.route("/")
 def home():
     with open("mini_app/index.html", encoding="utf-8") as f:
