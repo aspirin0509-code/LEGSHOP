@@ -1628,7 +1628,7 @@ def main():
     
     flask_app = Flask(__name__)
 
-@flask_app.route("/")
+    @flask_app.route("/")
     def home():
         return "LEGSHOP WORKING"
     if WEBHOOK_URL:
