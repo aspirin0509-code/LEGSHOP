@@ -1599,7 +1599,7 @@ async def resetphoto_command(update: Update, context: ContextTypes.DEFAULT_TYPE)
 flask_app = Flask(__name__)
 @flask_app.route("/")
 def home():
-    return "LEGSHOP WORKING"
+    return render_mini_app("index.html")
 def run_bot():
     import asyncio
     loop = asyncio.new_event_loop()
