@@ -1644,7 +1644,7 @@ def main():
             webhook_url=WEBHOOK_URL,
             drop_pending_updates=False,
         )
-     else:
+    else:
          print("[BOT] Polling mode. WEBHOOK_URL not set.")
          web_thread = Thread(
              target=flask_app.run,
