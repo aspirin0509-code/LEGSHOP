@@ -1,13 +1,6 @@
 import os, json, logging, csv, io
 import psycopg2
 import psycopg2.extras
-from flask import Flask
-from threading import Thread
-flask_app = Flask(__name__)
-@flask_app.route("/")
-def home():
-    with open("mini_app/index.html", encoding="utf-8") as f:
-        return f.read()
 from PIL import Image, ImageDraw, ImageFont
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, KeyboardButton, ReplyKeyboardMarkup, WebAppInfo
 from telegram.ext import Application, CommandHandler, MessageHandler, CallbackQueryHandler, filters, ContextTypes
@@ -1628,9 +1621,9 @@ def main():
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_phone_lookup))
     app.add_handler(CallbackQueryHandler(callback_query))
     
-    from flask import Flask
-    from threading import Thread
-    flask_app = Flask(__name__)
+from flask import Flask
+from threading import Thread
+flask_app = Flask(__name__)
 @flask_app.route("/")
 def home():
     with open("mini_app/index.html", encoding="utf-8") as f:
