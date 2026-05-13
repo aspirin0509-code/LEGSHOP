@@ -1627,7 +1627,10 @@ def run_bot():
     app.add_handler(MessageHandler(filters.Document.PDF, handle_document))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_phone_lookup))
     app.add_handler(CallbackQueryHandler(callback_query))
-    app.run_polling(drop_pending_updates=True)
+    app.run_polling(
+        drop_pending_updates=True
+        stop_signals=None
+    )
 #-------------START---------    
 if __name__ == "__main__":
     Thread(target=run_bot, daemon=True).start()
