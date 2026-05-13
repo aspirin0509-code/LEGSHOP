@@ -1598,9 +1598,9 @@ async def resetphoto_command(update: Update, context: ContextTypes.DEFAULT_TYPE)
 # ---------- ЗАПУСК (webhook режим) ----------
 flask_app = Flask(__name__)
 
-    @flask_app.route("/")
-    def home():
-        return "LEGSHOP WORKING"
+@flask_app.route("/")
+def home():
+    return "LEGSHOP WORKING"
 def main():
     print("MAIN STARTED")
     if not TOKEN:
