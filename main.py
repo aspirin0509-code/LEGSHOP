@@ -1637,9 +1637,19 @@ def run_bot():
     asyncio.set_event_loop(loop)
     
     loop.run_until_complete(
-    bot_app.bot.delete_webhook(drop_pending_updates=True)
+        bot_app.initialize()
     )
-    bot_app.run_polling(drop_pending_updates=True)
+    loop.run_until_complete(
+        bot_app.bot.delete_webhook(drop_pending_updates=True)
+    )
+     loop.run_until_complete(
+        bot_app.start()
+    )
+     loop.run_until_complete(
+        bot_app.updater.start_polling()
+    )
+    print("[BOT] START POLLING")    
+    loop.run_forever()
 #-------------START---------    
 if __name__ == "__main__":
     Thread(target=run_bot, daemon=True).start()
