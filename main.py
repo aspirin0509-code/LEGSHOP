@@ -1601,6 +1601,9 @@ flask_app = Flask(__name__)
 def home():
     return "LEGSHOP WORKING"
 def run_bot():
+    import asyncio
+    loop = asincio.new_event_loop()
+    asincio.cet_event_loop(loop)
     print("[BOT] START POLLING")
     app = Application.builder().token(TOKEN).build()
     app.add_handler(CommandHandler("start", start))
