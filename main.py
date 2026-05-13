@@ -1,13 +1,16 @@
 import os, json, logging, csv, io
 import psycopg2
 import psycopg2.extras
+
 from flask import Flask
 from threading import Thread
-flask_app = Flask(__name__)
-@flask_app.route("/")
+
 from PIL import Image, ImageDraw, ImageFont
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, KeyboardButton, ReplyKeyboardMarkup, WebAppInfo
 from telegram.ext import Application, CommandHandler, MessageHandler, CallbackQueryHandler, filters, ContextTypes
+
+flask_app = Flask(__name__)
+@flask_app.route("/")
 
 TOKEN = os.environ.get('TELEGRAM_BOT_TOKEN')
 ADMIN_CHAT_ID = 1353106724
