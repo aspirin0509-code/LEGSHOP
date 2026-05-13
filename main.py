@@ -1634,11 +1634,10 @@ def main():
     app.run_polling(drop_pending_updates=True)
     
     if __name__ == "__main__":
-    
-    Thread(target=main, deamon=True).start()
-    print("[WEB] START FLASK")
-    flask_app.run(
-        host="0.0.0.0",
-        port=int(os.environ.get("PORT", 8080))
-        debug=False
-    )
+        Thread(target=main, deamon=True).start()
+        print("[WEB] START FLASK")
+        flask_app.run(
+            host="0.0.0.0",
+            port=int(os.environ.get("PORT", 8080))
+            debug=False
+        )
