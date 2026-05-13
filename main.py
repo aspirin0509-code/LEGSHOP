@@ -1642,10 +1642,10 @@ def run_bot():
     loop.run_until_complete(
         bot_app.bot.delete_webhook(drop_pending_updates=True)
     )
-     loop.run_until_complete(
+    loop.run_until_complete(
         bot_app.start()
     )
-     loop.run_until_complete(
+    loop.run_until_complete(
         bot_app.updater.start_polling()
     )
     print("[BOT] START POLLING")    
