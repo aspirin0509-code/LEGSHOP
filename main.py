@@ -228,7 +228,7 @@ def db_get_all_orders(status_filter=None):
         conn.close()
 
 # ---------- ГЕНЕРАЦИЯ БИЛЕТА ----------
-BG_PATH = os.path.join(os.path.dirname(__file__), 'public', 'legenda_bg.png')
+BG_PATH = os.path.join(MINI_APP_DIR,'legenda_bg.png')
 FONT_BOLD = '/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf'
 
 def generate_ticket(order_id: int, fio: str) -> io.BytesIO:
