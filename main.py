@@ -24,7 +24,7 @@ print(f"[BOT] WEBAPP_URL={WEBAPP_URL} PORT={PORT}")
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
-logging.getLogger("telegtam").setLevel(logging.DEBUG)
+logging.getLogger("telegram").setLevel(logging.DEBUG)
 
 # ---------- БАЗА ДАННЫХ ----------
 DATABASE_URL = os.environ.get('DATABASE_URL')
