@@ -1,4 +1,4 @@
-import os, json, logging, csv, io
+import os, json, logging, csv, io, asynio
 import psycopg2
 import psycopg2.extras
 
@@ -1668,31 +1668,35 @@ def api_create_order():
     return jsonify({"order_id": order_id})
 
 # ---------- ЗАПУСК ----------
-def run_bot():
+async def main_bot():
     print("[BOT] Starting polling...")
-    app = Application.builder().token(TOKEN).build()
-    app.add_handler(CommandHandler("start", start))
-    app.add_handler(CommandHandler("help", help_command))
-    app.add_handler(CommandHandler("orders", orders_command))
-    app.add_handler(CommandHandler("order", order_detail_command))
-    app.add_handler(CommandHandler("resetorders", resetorders_command))
-    app.add_handler(CommandHandler("stats", stats_command))
-    app.add_handler(CommandHandler("export", export_command))
-    app.add_handler(CommandHandler("find", find_command))
-    app.add_handler(CommandHandler("renotify", renotify_command))
-    app.add_handler(MessageHandler(filters.Regex(r'^/renotify\d+'), renotify_command))
-    app.add_handler(CommandHandler("sendposter", sendposter_command))
-    app.add_handler(MessageHandler(filters.Regex(r'^/sendposter\d+'), sendposter_command))
-    app.add_handler(CommandHandler("sendreflinks", sendreflinks_command))
-    app.add_handler(CommandHandler("resetphoto", resetphoto_command))
-    app.add_handler(CommandHandler("clearunpaid", clearunpaid_command))
-    app.add_handler(MessageHandler(filters.StatusUpdate.WEB_APP_DATA, handle_webapp_data))
-    app.add_handler(MessageHandler(filters.TEXT & filters.Regex(r"^/start\\s+order_"), handle_webapp_data))
-    app.add_handler(MessageHandler(filters.PHOTO, handle_photo))
-    app.add_handler(MessageHandler(filters.Document.PDF, handle_document))
-    app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_phone_lookup))
-    app.add_handler(CallbackQueryHandler(callback_query))
-    app.run_polling(drop_pending_updates=True, close_loop=False)
+    bot_app = Application.builder().token(TOKEN).build()
+    bot_app.add_handler(CommandHandler("start", start))
+    bot_app.add_handler(CommandHandler("help", help_command))
+    bot_app.add_handler(CommandHandler("orders", orders_command))
+    bot_app.add_handler(CommandHandler("order", order_detail_command))
+    bot_app.add_handler(CommandHandler("resetorders", resetorders_command))
+    bot_app.add_handler(CommandHandler("stats", stats_command))
+    bot_app.add_handler(CommandHandler("export", export_command))
+    bot_app.add_handler(CommandHandler("find", find_command))
+    bot_app.add_handler(CommandHandler("renotify", renotify_command))
+    bot_app.add_handler(MessageHandler(filters.Regex(r'^/renotify\d+'), renotify_command))
+    bot_app.add_handler(CommandHandler("sendposter", sendposter_command))
+    bot_app.add_handler(MessageHandler(filters.Regex(r'^/sendposter\d+'), sendposter_command))
+    bot_app.add_handler(CommandHandler("sendreflinks", sendreflinks_command))
+    bot_app.add_handler(CommandHandler("resetphoto", resetphoto_command))
+    bot_app.add_handler(CommandHandler("clearunpaid", clearunpaid_command))
+    bot_app.add_handler(MessageHandler(filters.StatusUpdate.WEB_APP_DATA, handle_webapp_data))
+    bot_app.add_handler(MessageHandler(filters.TEXT & filters.Regex(r"^/start\\s+order_"), handle_webapp_data))
+    bot_app.add_handler(MessageHandler(filters.PHOTO, handle_photo))
+    bot_app.add_handler(MessageHandler(filters.Document.PDF, handle_document))
+    bot_app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_phone_lookup))
+    bot_app.add_handler(CallbackQueryHandler(callback_query))
+        await bot_app.initialize()
+        await
+    bot_app.updater.start_polling(drop_pending_updates=True)
+        Print("[BOT] Started polling")
+        await asyncio.event().wait()
 
 if __name__ == "__main__":
     Thread(target=run_bot, daemon=True).start()
