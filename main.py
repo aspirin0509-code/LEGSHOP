@@ -1699,5 +1699,5 @@ bot_app.updater.start_polling(drop_pending_updates=True)
     await asyncio.event().wait()
 
 if __name__ == "__main__":
-    Thread(target=run_bot, daemon=True).start()
-    flask_app.run(host="0.0.0.0", port=PORT)
+    Thread(target=flask_app.run, kwargs={"host": "0.0.0.0", "port"=PORT}, daemon=True).start()
+    asyncio.run(main_bot())
