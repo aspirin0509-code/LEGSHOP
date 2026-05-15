@@ -1602,7 +1602,7 @@ flask_app = Flask(__name__)
 @flask_app.route("/")
 def home():
     return send_from_directory("mini_app", "index.html")
-@flask_app.route("/<path:filename>")
+@flask_app.route("/mini_app/<path:filename>")
 def static_files(filename):
     return send_from_directory(MINI_APP_DIR, filename)
 def run_bot():
