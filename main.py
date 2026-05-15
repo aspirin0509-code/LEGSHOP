@@ -1691,6 +1691,7 @@ bot_app.add_handler(MessageHandler(filters.PHOTO, handle_photo))
 bot_app.add_handler(MessageHandler(filters.Document.PDF, handle_document))
 bot_app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_phone_lookup))
 bot_app.add_handler(CallbackQueryHandler(callback_query))
+
     await bot_app.initialize()
     await
 bot_app.updater.start_polling(drop_pending_updates=True)
