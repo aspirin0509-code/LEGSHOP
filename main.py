@@ -1694,6 +1694,7 @@ async def main_bot():
     bot_app.add_handler(CallbackQueryHandler(callback_query))
     
     await bot_app.initialize()
+    await bot_app.srart()
     await bot_app.updater.start_polling(drop_pending_updates=True)
     print("[BOT] Started polling")
     await asyncio.Event().wait()
