@@ -1669,8 +1669,7 @@ def api_create_order():
 
 # ---------- ЗАПУСК ----------
 async def main_bot():
-    bot_app =
-Application.builder().token(TOKEN).build()
+    bot_app = Application.builder().token(TOKEN).build()
 bot_app.add_handler(CommandHandler("start", start))
 bot_app.add_handler(CommandHandler("help", help_command))
 bot_app.add_handler(CommandHandler("orders", orders_command))
